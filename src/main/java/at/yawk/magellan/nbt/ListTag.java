@@ -2,6 +2,7 @@ package at.yawk.magellan.nbt;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -64,4 +65,8 @@ class ListTag extends Tag {
         return tags.iterator();
     }
 
+    @Override
+    public Spliterator<Tag> spliterator() {
+        return tags.spliterator();
+    }
 }

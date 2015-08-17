@@ -2,6 +2,7 @@ package at.yawk.magellan.nbt;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Spliterator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -40,6 +41,11 @@ class CompoundTag extends Tag {
     @Override
     public Iterator<Tag> iterator() {
         return tags.values().iterator();
+    }
+
+    @Override
+    public Spliterator<Tag> spliterator() {
+        return tags.values().spliterator();
     }
 
 }

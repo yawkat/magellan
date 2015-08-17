@@ -2,9 +2,9 @@ package at.yawk.magellan.nbt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -140,6 +140,15 @@ public abstract class Tag implements Iterable<Tag> {
     @Override
     public Iterator<Tag> iterator() {
         throw unsupported();
+    }
+
+    @Override
+    public Spliterator<Tag> spliterator() {
+        throw unsupported();
+    }
+
+    public Stream<Tag> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
     /// FACTORIES
