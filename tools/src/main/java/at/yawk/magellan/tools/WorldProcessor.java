@@ -26,10 +26,14 @@ public class WorldProcessor extends Application {
         for (Path worldFolder : worldFolders) {
             Path name = worldFolder.toAbsolutePath().getFileName();
             log.info("Processing world '{}'...", name);
-            processWorld(WorldFolder.create(worldFolder))
-                    .thenRun(() -> log.info("Processed world '{}'", name));
+            processWorld(WorldFolder.create(worldFolder)).thenRun(() -> {
+                log.info("Processed world '{}'", name);
+                onComplete();
+            });
         }
     }
+
+    protected void onComplete() {}
 
     protected CompletionStage<?> processWorld(WorldFolder worldFolder) throws Exception {
         List<RegionPosition> regions = worldFolder.getRegionPositions();

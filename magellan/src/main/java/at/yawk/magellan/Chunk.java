@@ -28,6 +28,8 @@ public class Chunk {
         this.root = root;
     }
 
+    ///// SERIALIZATION
+
     public static Chunk fromTag(Tag root) {
         return new Chunk(root);
     }
@@ -69,6 +71,8 @@ public class Chunk {
         }
     }
 
+    ///// DATA
+
     public List<Section> getSections() {
         return getMappedCompoundList("Sections", Section::new);
     }
@@ -82,9 +86,21 @@ public class Chunk {
     }
 
     private <T> List<T> getMappedCompoundList(String tagName, Function<Tag, T> factory) {
-        return root.getTag("Level")
+        return getLevelTag()
                 .getTag(tagName).stream()
                 .map(factory)
                 .collect(Collectors.toList());
+    }
+
+    public int getChunkX() {
+        return getLevelTag().getTag("xPos").intValue();
+    }
+
+    public int getChunkZ() {
+        return getLevelTag().getTag("zPos").intValue();
+    }
+
+    private Tag getLevelTag() {
+        return root.getTag("Level");
     }
 }
