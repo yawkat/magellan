@@ -216,7 +216,7 @@ public class RegionFile {
 
     public void save(Path path) throws IOException {
         try (SeekableByteChannel channel = Files.newByteChannel(
-                path, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
+                path, StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
             buffer.clear();
             while (buffer.hasRemaining()) {
                 channel.write(buffer);

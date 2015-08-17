@@ -10,9 +10,10 @@ import at.yawk.rjoin.zlib.ZInflater;
 import at.yawk.rjoin.zlib.Zlib;
 import at.yawk.rjoin.zlib.ZlibException;
 import java.nio.ByteBuffer;
+import java.util.AbstractList;
 import java.util.List;
+import java.util.RandomAccess;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -86,10 +87,8 @@ public class Chunk {
     }
 
     private <T> List<T> getMappedCompoundList(String tagName, Function<Tag, T> factory) {
-        return getLevelTag()
-                .getTag(tagName).stream()
-                .map(factory)
-                .collect(Collectors.toList());
+        Tag tag = getLevelTag().getTag(tagName);
+        return new MappedTagList<>(tag, factory);
     }
 
     public int getChunkX() {
@@ -102,5 +101,32 @@ public class Chunk {
 
     private Tag getLevelTag() {
         return root.getTag("Level");
+    }
+
+    private static class MappedTagList<T> extends AbstractList<T> implements RandomAccess {
+        private final Tag tag;
+        private final Function<Tag, T> factory;
+
+        public MappedTagList(Tag tag, Function<Tag, T> factory) {
+            this.tag = tag;
+            this.factory = factory;
+        }
+
+        @Override
+        public T get(int index) {
+            return factory.apply(tag.getTag(index));
+        }
+
+        @Override
+        public T remove(int index) {
+            T t = get(index);
+            tag.removeTag(index);
+            return t;
+        }
+
+        @Override
+        public int size() {
+            return tag.size();
+        }
     }
 }

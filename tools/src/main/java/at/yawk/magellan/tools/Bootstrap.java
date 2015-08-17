@@ -1,6 +1,7 @@
 package at.yawk.magellan.tools;
 
 import at.yawk.magellan.tools.impl.TileCounter;
+import at.yawk.magellan.tools.impl.TileRemover;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Bootstrap {
 
     static {
         NAMED_APPLICATIONS.put("tileCounter", TileCounter.class);
+        NAMED_APPLICATIONS.put("tileRemover", TileRemover.class);
     }
 
     public static void main(String[] args) throws ClassNotFoundException {
