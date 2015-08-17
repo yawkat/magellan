@@ -17,7 +17,7 @@ class AnsiCli implements Cli {
     @GuardedBy("this")
     final Queue<ProgressImpl> progresses = new ArrayDeque<>();
 
-    int width = 80; // todo
+    int width = Integer.getInteger("termWidth", 120);
 
     AnsiCli(PrintStream stream) {
         this.stream = stream;
