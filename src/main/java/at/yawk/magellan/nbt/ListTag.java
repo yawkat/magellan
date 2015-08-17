@@ -2,10 +2,12 @@ package at.yawk.magellan.nbt;
 
 import java.util.List;
 import javax.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author yawkat
  */
+@EqualsAndHashCode(of = { "componentType", "tags" }, callSuper = false)
 class ListTag extends Tag {
     @Nullable
     private TagType componentType;
@@ -13,7 +15,7 @@ class ListTag extends Tag {
 
     ListTag(@Nullable TagType componentType, List<Tag> tags) {
         super(TagType.LIST);
-        this.componentType = componentType;
+        this.componentType = tags.isEmpty() ? null : componentType;
         this.tags = tags;
     }
 
@@ -58,5 +60,10 @@ class ListTag extends Tag {
     @Override
     public int size() {
         return tags.size();
+    }
+
+    @Override
+    public String toString() {
+        return "List" + tags;
     }
 }

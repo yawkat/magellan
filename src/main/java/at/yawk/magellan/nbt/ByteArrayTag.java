@@ -1,16 +1,21 @@
 package at.yawk.magellan.nbt;
 
 import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author yawkat
  */
+@EqualsAndHashCode(of = "array", callSuper = false)
 class ByteArrayTag extends Tag {
     private final ByteBuffer array;
 
     ByteArrayTag(ByteBuffer array) {
-        super(TagType.INT_ARRAY);
+        super(TagType.BYTE_ARRAY);
         this.array = array;
+
+        array.position(0);
+        array.limit(array.capacity());
     }
 
     @Override
@@ -41,5 +46,10 @@ class ByteArrayTag extends Tag {
     @Override
     public int size() {
         return array.capacity();
+    }
+
+    @Override
+    public String toString() {
+        return "ByteArray[length=" + size() + "]";
     }
 }

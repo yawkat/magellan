@@ -1,10 +1,12 @@
 package at.yawk.magellan.nbt;
 
 import java.nio.IntBuffer;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author yawkat
  */
+@EqualsAndHashCode(of = "array", callSuper = false)
 class IntArrayTag extends Tag {
     private final IntBuffer array;
 
@@ -41,5 +43,10 @@ class IntArrayTag extends Tag {
     @Override
     public int size() {
         return array.capacity();
+    }
+
+    @Override
+    public String toString() {
+        return "IntArray[length=" + size() + "]";
     }
 }

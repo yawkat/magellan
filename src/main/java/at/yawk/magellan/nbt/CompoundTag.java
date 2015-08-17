@@ -1,10 +1,13 @@
 package at.yawk.magellan.nbt;
 
 import java.util.Map;
+import java.util.stream.Collectors;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author yawkat
  */
+@EqualsAndHashCode(of = "tags", callSuper = false)
 class CompoundTag extends Tag {
     private final Map<String, Tag> tags;
 
@@ -36,5 +39,12 @@ class CompoundTag extends Tag {
     @Override
     public int size() {
         return tags.size();
+    }
+
+    @Override
+    public String toString() {
+        return tags.entrySet()
+                .stream().map(e -> '"' + String.valueOf(e.getKey()) + "\"=" + e.getValue())
+                .collect(Collectors.joining(", ", "Compound{", "}"));
     }
 }

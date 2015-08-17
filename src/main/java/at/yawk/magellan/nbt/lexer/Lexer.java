@@ -18,6 +18,7 @@ public class Lexer {
     @Getter CharSequence name;
 
     @Getter TagType type;
+    @Nullable
     @Getter TagType componentType;
     @Getter private CharSequence stringValue;
     @Getter private long longValue;
@@ -166,8 +167,11 @@ public class Lexer {
         return Event.START_LIST;
     }
 
+    @Nullable
     private static TagType getType(byte id) {
         switch (id) {
+        case TagId.END:
+            return null;
         case TagId.BYTE:
             return TagType.BYTE;
         case TagId.SHORT:

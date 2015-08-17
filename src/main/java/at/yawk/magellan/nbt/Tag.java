@@ -4,14 +4,18 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author yawkat
  */
-@RequiredArgsConstructor
+@EqualsAndHashCode(of = "type")
 public abstract class Tag {
     private final TagType type;
+
+    Tag(TagType type) {
+        this.type = type;
+    }
 
     public final TagType getType() {
         return type;
@@ -150,10 +154,16 @@ public abstract class Tag {
     }
 
     public static Tag ofString(String value) {
-        return new StringTag(TagType.STRING, value);
+        return new StringTag(value);
     }
 
     public static Tag ofList(TagType componentType, List<Tag> tags) {
+        tags.forEach(t -> {
+            if (t.getType() != componentType) {
+                throw new IllegalArgumentException(
+                        "Mismatched component type (expected " + componentType + ", was " + t.getType() + ")");
+            }
+        });
         return new ListTag(componentType, tags);
     }
 
@@ -161,11 +171,27 @@ public abstract class Tag {
         return new CompoundTag(tags);
     }
 
-    public static Tag ofArray(byte[] array) {
+    /**
+     * Get a {@link TagType#BYTE_ARRAY} tag from readable bytes of the given buffer. The buffer positions will not be
+     * modified. The returned tag will share the buffer.
+     */
+    public static Tag ofByteBuffer(ByteBuffer buffer) {
+        return new ByteArrayTag(buffer.slice());
+    }
+
+    public static Tag ofByteArray(byte[] array) {
         return new ByteArrayTag(ByteBuffer.wrap(array));
     }
 
-    public static Tag ofArray(int[] array) {
+    /**
+     * Get a {@link TagType#INT_ARRAY} tag from readable ints of the given buffer. The buffer positions will not be
+     * modified. The returned tag will share the buffer.
+     */
+    public static Tag ofIntBuffer(IntBuffer buffer) {
+        return new IntArrayTag(buffer.slice());
+    }
+
+    public static Tag ofIntArray(int[] array) {
         return new IntArrayTag(IntBuffer.wrap(array));
     }
 

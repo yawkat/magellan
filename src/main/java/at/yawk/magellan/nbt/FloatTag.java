@@ -1,8 +1,11 @@
 package at.yawk.magellan.nbt;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author yawkat
  */
+@EqualsAndHashCode(of = "value", callSuper = true)
 class FloatTag extends Tag {
     private final double value;
 
@@ -33,6 +36,11 @@ class FloatTag extends Tag {
 
     @Override
     public String stringValue() {
+        return String.valueOf(value);
+    }
+
+    @Override
+    public String toString() {
         return String.valueOf(value);
     }
 }
