@@ -160,6 +160,7 @@ public class LexerTest {
         assertEquals(lexer.next(), Event.END_COMPOUND);
 
         assertEquals(lexer.next(), Event.START_LIST);
+        assertEquals(lexer.getComponentType(), TagType.LONG);
         assertEquals(lexer.getName().toString(), "listTest (long)");
 
         for (int i = 11; i <= 15; i++) {
@@ -171,6 +172,7 @@ public class LexerTest {
         assertEquals(lexer.next(), Event.END_LIST);
 
         assertEquals(lexer.next(), Event.START_LIST);
+        assertEquals(lexer.getComponentType(), TagType.COMPOUND);
         assertEquals(lexer.getName().toString(), "listTest (compound)");
 
         assertEquals(lexer.next(), Event.START_COMPOUND);

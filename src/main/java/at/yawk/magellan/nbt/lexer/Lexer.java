@@ -18,6 +18,7 @@ public class Lexer {
     @Getter CharSequence name;
 
     @Getter TagType type;
+    @Getter TagType componentType;
     @Getter private CharSequence stringValue;
     @Getter private long longValue;
     @Getter private double doubleValue;
@@ -161,7 +162,37 @@ public class Lexer {
         byte type = input.get();
         int length = input.getInt();
         pushWalker(new ListWalker(this, length, type));
+        componentType = getType(type);
         return Event.START_LIST;
+    }
+
+    private static TagType getType(byte id) {
+        switch (id) {
+        case TagId.BYTE:
+            return TagType.BYTE;
+        case TagId.SHORT:
+            return TagType.SHORT;
+        case TagId.INT:
+            return TagType.INT;
+        case TagId.LONG:
+            return TagType.LONG;
+        case TagId.FLOAT:
+            return TagType.FLOAT;
+        case TagId.DOUBLE:
+            return TagType.DOUBLE;
+        case TagId.STRING:
+            return TagType.STRING;
+        case TagId.BYTE_ARRAY:
+            return TagType.BYTE_ARRAY;
+        case TagId.INT_ARRAY:
+            return TagType.INT_ARRAY;
+        case TagId.LIST:
+            return TagType.LIST;
+        case TagId.COMPOUND:
+            return TagType.COMPOUND;
+        default:
+            throw new AssertionError(id);
+        }
     }
 
     private Event walkCompound() {
