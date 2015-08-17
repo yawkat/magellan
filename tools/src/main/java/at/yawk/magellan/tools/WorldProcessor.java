@@ -36,7 +36,21 @@ public class WorldProcessor extends Application {
     protected void onComplete() {}
 
     protected CompletionStage<?> processWorld(WorldFolder worldFolder) throws Exception {
-        List<RegionPosition> regions = worldFolder.getRegionPositions();
+        CompletionStage<?> completion = CompletableFuture.completedFuture(null);
+        for (int index : worldFolder.getRegionIndexes()) {
+            RegionFolder folder = worldFolder.getRegionFolder(index);
+
+            log.info("Processing region folder {}", folder);
+            completion = completion.thenCombine(
+                    processRegionFolder(folder),
+                    (a, b) -> null
+            ).thenRun(() -> log.info("Processed region folder {}", folder));
+        }
+        return completion;
+    }
+
+    protected CompletionStage<?> processRegionFolder(RegionFolder regionFolder) throws Exception {
+        List<RegionPosition> regions = regionFolder.getRegionPositions();
         if (regions.isEmpty()) {
             log.warn("No regions found.");
             return CompletableFuture.completedFuture(null);
@@ -46,7 +60,7 @@ public class WorldProcessor extends Application {
         for (RegionPosition region : regions) {
             completionStage = completionStage.thenCombine(executeLogging(() -> {
                 log.info("Processing region {}...", region);
-                Path path = worldFolder.getRegionPath(region);
+                Path path = regionFolder.getRegionPath(region);
                 RegionFile file = RegionFile.load(path);
                 processRegion(file).thenAccept(save -> {
                     if (save) {

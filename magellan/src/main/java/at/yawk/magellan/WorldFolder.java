@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  * @author yawkat
  */
 public class WorldFolder {
-    private static final Pattern REGION_FILE_PATTERN =
-            Pattern.compile("r\\.(-?\\d+)\\.(-?\\d+)\\.mca");
+    private static final Pattern REGION_FOLDER_PATTERN =
+            Pattern.compile("(?:region|DIM(-?\\d+))");
 
     private final Path path;
 
@@ -26,18 +26,21 @@ public class WorldFolder {
         return new WorldFolder(path);
     }
 
-    public Path getRegionPath(RegionPosition position) {
-        return path.resolve("region")
-                .resolve("r." + position.getX() + "." + position.getZ() + ".mca");
+    public RegionFolder getRegionFolder(int dimensionIndex) {
+        if (dimensionIndex == 0) {
+            return RegionFolder.create(path.resolve("region"));
+        } else {
+            return RegionFolder.create(path.resolve("DIM" + dimensionIndex));
+        }
     }
 
-    public List<RegionPosition> getRegionPositions() throws IOException {
-        Path regionFolder = path.resolve("region");
-        if (!Files.isDirectory(regionFolder)) { return Collections.emptyList(); }
-        return Files.list(regionFolder)
-                .map(p -> REGION_FILE_PATTERN.matcher(p.getFileName().toString()))
+    public List<Integer> getRegionIndexes() throws IOException {
+        if (!Files.isDirectory(path)) { return Collections.emptyList(); }
+        return Files.list(path)
+                .map(p -> REGION_FOLDER_PATTERN.matcher(p.getFileName().toString()))
                 .filter(Matcher::matches)
-                .map(result -> new RegionPosition(Integer.parseInt(result.group(1)), Integer.parseInt(result.group(2))))
+                .map(result -> result.group(1))
+                .map(index -> index == null ? 0 : Integer.parseInt(index))
                 .collect(Collectors.toList());
     }
 }
