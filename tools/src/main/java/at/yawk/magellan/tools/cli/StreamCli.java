@@ -23,6 +23,9 @@ class StreamCli implements Cli {
         public void setMax(int max) {}
 
         @Override
+        public void incrementMax(int amount) {}
+
+        @Override
         public void remove() {}
     };
 

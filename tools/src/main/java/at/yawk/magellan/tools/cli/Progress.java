@@ -19,5 +19,11 @@ public interface Progress {
 
     void setMax(int max);
 
+    void incrementMax(int amount);
+
+    default void incrementMax() {
+        incrementMax(1);
+    }
+
     void remove();
 }

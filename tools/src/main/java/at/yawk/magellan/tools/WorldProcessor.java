@@ -1,6 +1,7 @@
 package at.yawk.magellan.tools;
 
 import at.yawk.magellan.*;
+import at.yawk.magellan.tools.cli.Progress;
 import at.yawk.rjoin.zlib.ZlibException;
 import com.beust.jcommander.Parameter;
 import java.io.IOException;
@@ -20,6 +21,8 @@ public class WorldProcessor extends Application {
             required = true
     )
     private List<Path> worldFolders;
+
+    private Progress regionProgress;
 
     @Override
     public void run() throws Exception {
@@ -56,6 +59,16 @@ public class WorldProcessor extends Application {
             return CompletableFuture.completedFuture(null);
         }
 
+        if (regionProgress == null) {
+            synchronized (this) {
+                if (regionProgress == null) {
+                    regionProgress = getCli().createProgress();
+                    regionProgress.setLabel("Regions");
+                }
+            }
+        }
+        regionProgress.incrementMax(regions.size());
+
         CompletionStage<?> completionStage = CompletableFuture.completedFuture(null);
         for (RegionPosition region : regions) {
             completionStage = completionStage.thenCombine(executeLogging(() -> {
@@ -77,6 +90,7 @@ public class WorldProcessor extends Application {
                     } else {
                         log.info("Processed region {} without changes", region);
                     }
+                    regionProgress.incrementValue();
                 });
                 return null;
             }), (a, b) -> null);

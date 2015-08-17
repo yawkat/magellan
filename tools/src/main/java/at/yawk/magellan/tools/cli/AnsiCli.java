@@ -131,6 +131,12 @@ class AnsiCli implements Cli {
         }
 
         @Override
+        public synchronized void incrementMax(int amount) {
+            this.max += amount;
+            paint();
+        }
+
+        @Override
         public synchronized void remove() {
             removeProgress(this);
         }
