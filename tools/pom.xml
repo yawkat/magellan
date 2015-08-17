@@ -9,13 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>magellan</artifactId>
+    <artifactId>magellan-tools</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>at.yawk.rjoin</groupId>
-            <artifactId>rjoin-zlib</artifactId>
+            <groupId>at.yawk.magellan</groupId>
+            <artifactId>magellan</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.48</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.lanterna</groupId>
+            <artifactId>lanterna</artifactId>
+            <version>2.1.9</version>
         </dependency>
     </dependencies>
 </project>
