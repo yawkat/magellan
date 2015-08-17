@@ -3,6 +3,7 @@ package at.yawk.magellan.nbt;
 import java.util.List;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @author yawkat
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = { "componentType", "tags" }, callSuper = false)
 class ListTag extends Tag {
     @Nullable
-    private TagType componentType;
+    @Getter private TagType componentType;
     private final List<Tag> tags;
 
     ListTag(@Nullable TagType componentType, List<Tag> tags) {

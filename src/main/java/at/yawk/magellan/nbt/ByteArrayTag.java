@@ -2,13 +2,14 @@ package at.yawk.magellan.nbt;
 
 import java.nio.ByteBuffer;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @author yawkat
  */
 @EqualsAndHashCode(of = "array", callSuper = false)
 class ByteArrayTag extends Tag {
-    private final ByteBuffer array;
+    @Getter private final ByteBuffer array;
 
     ByteArrayTag(ByteBuffer array) {
         super(TagType.BYTE_ARRAY);

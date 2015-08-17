@@ -13,9 +13,9 @@ import lombok.EqualsAndHashCode;
 @ThreadSafe
 @EqualsAndHashCode(of = "source")
 class LazyCharSequence implements CharSequence {
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
+    static final Charset CHARSET = StandardCharsets.UTF_8;
 
-    private final ByteBuffer source;
+    final ByteBuffer source;
     private String value; // lazily decoded
 
     LazyCharSequence(ByteBuffer source) {
@@ -24,8 +24,7 @@ class LazyCharSequence implements CharSequence {
 
     private String getValue() {
         if (value == null) {
-            Charset charset = CHARSET;
-            value = charset.decode(source.slice()).toString();
+            value = CHARSET.decode(source.slice()).toString();
         }
         return value;
     }

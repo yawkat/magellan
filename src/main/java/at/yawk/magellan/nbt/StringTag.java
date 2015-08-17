@@ -1,12 +1,13 @@
 package at.yawk.magellan.nbt;
 
 import java.util.Objects;
+import lombok.Getter;
 
 /**
  * @author yawkat
  */
 class StringTag extends Tag {
-    private final CharSequence value;
+    @Getter private final CharSequence value;
 
     StringTag(CharSequence value) {
         super(TagType.STRING);

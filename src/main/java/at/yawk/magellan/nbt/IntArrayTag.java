@@ -2,13 +2,14 @@ package at.yawk.magellan.nbt;
 
 import java.nio.IntBuffer;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @author yawkat
  */
 @EqualsAndHashCode(of = "array", callSuper = false)
 class IntArrayTag extends Tag {
-    private final IntBuffer array;
+    @Getter private final IntBuffer array;
 
     IntArrayTag(IntBuffer array) {
         super(TagType.INT_ARRAY);

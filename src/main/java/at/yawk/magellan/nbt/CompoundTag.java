@@ -3,13 +3,14 @@ package at.yawk.magellan.nbt;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @author yawkat
  */
 @EqualsAndHashCode(of = "tags", callSuper = false)
 class CompoundTag extends Tag {
-    private final Map<String, Tag> tags;
+    @Getter private final Map<String, Tag> tags;
 
     public CompoundTag(Map<String, Tag> tags) {
         super(TagType.COMPOUND);
