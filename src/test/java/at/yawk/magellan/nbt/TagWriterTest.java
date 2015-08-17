@@ -45,7 +45,7 @@ public class TagWriterTest {
 
         Lexer lexer = Lexer.create();
         lexer.setInput(expected, true);
-        RootTag tag = Parser.create(lexer).parse();
+        RootTag tag = TagReader.create(lexer).parse();
 
         Emitter emitter = Emitter.create();
         emitter.setOutput(actual);

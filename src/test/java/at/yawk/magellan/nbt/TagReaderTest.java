@@ -1,9 +1,7 @@
 package at.yawk.magellan.nbt;
 
 import at.yawk.magellan.nbt.lexer.Lexer;
-import com.google.common.collect.ImmutableMap;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -11,7 +9,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author yawkat
  */
-public class ParserTest {
+public class TagReaderTest {
     @Test
     public void testSmall() throws Exception {
         ByteBuffer input = NbtTest.small();
@@ -19,7 +17,7 @@ public class ParserTest {
         Lexer lexer = Lexer.create();
         lexer.setInput(input, true);
 
-        Parser parser = Parser.create(lexer);
+        TagReader parser = TagReader.create(lexer);
         RootTag rootTag = parser.parse();
 
         assertEquals(input.remaining(), 0);
@@ -33,7 +31,7 @@ public class ParserTest {
         Lexer lexer = Lexer.create();
         lexer.setInput(input, true);
 
-        Parser parser = Parser.create(lexer);
+        TagReader parser = TagReader.create(lexer);
         RootTag rootTag = parser.parse();
 
         assertEquals(input.remaining(), 0);

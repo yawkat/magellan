@@ -9,18 +9,18 @@ import javax.annotation.Nullable;
 /**
  * @author yawkat
  */
-public class Parser {
+public class TagReader {
     private final Lexer lexer;
 
     private final Deque<Tag> tagStack = new ArrayDeque<>();
     private RootTag rootTag;
 
-    private Parser(Lexer lexer) {
+    private TagReader(Lexer lexer) {
         this.lexer = lexer;
     }
 
-    public static Parser create(Lexer lexer) {
-        return new Parser(lexer);
+    public static TagReader create(Lexer lexer) {
+        return new TagReader(lexer);
     }
 
     public RootTag parse() throws NeedInputException {
