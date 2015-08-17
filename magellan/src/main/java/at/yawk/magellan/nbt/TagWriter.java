@@ -1,7 +1,9 @@
 package at.yawk.magellan.nbt;
 
+import at.yawk.magellan.internal.GrowingBuffer;
 import at.yawk.magellan.nbt.lexer.Emitter;
 import at.yawk.magellan.nbt.lexer.NeedOutputException;
+import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
@@ -24,6 +26,40 @@ public class TagWriter {
 
     public static TagWriter create(Emitter emitter, RootTag root) {
         return new TagWriter(emitter, root);
+    }
+
+    public static ByteBuffer toBuffer(RootTag tag) {
+        Emitter emitter = Emitter.create();
+        TagWriter writer = create(emitter, tag);
+
+        GrowingBuffer resultBuffer = new GrowingBuffer();
+
+        int componentSize = 4096;
+        while (true) {
+            ByteBuffer buffer = resultBuffer.nextWritable(componentSize);
+            emitter.setOutput(buffer);
+
+            boolean complete;
+            try {
+                writer.emit();
+                complete = true;
+            } catch (NeedOutputException e) {
+                // continue processing
+                complete = false;
+            }
+
+            int moved = buffer.position();
+            if (moved == 0) {
+                // nothing moved - need a bigger buffer
+                componentSize = Math.multiplyExact(componentSize, 2);
+            }
+
+            if (complete) {
+                break;
+            }
+        }
+
+        return resultBuffer.combine();
     }
 
     public void emit() throws NeedOutputException {

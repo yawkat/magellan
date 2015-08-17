@@ -3,20 +3,23 @@ package at.yawk.magellan;
 import at.yawk.magellan.nbt.RootTag;
 import at.yawk.magellan.nbt.Tag;
 import at.yawk.magellan.nbt.TagReader;
+import at.yawk.magellan.nbt.TagWriter;
 import at.yawk.magellan.nbt.lexer.Lexer;
+import at.yawk.rjoin.zlib.ZDeflater;
 import at.yawk.rjoin.zlib.ZInflater;
 import at.yawk.rjoin.zlib.Zlib;
 import at.yawk.rjoin.zlib.ZlibException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
  * @author yawkat
  */
+@EqualsAndHashCode
 public class Chunk {
     @Getter
     private final Tag root;
@@ -44,39 +47,25 @@ public class Chunk {
         byte compressionType = buffer.get();
         switch (compressionType) {
         case 2: // zlib
-            if (Zlib.supportsNative() && !buffer.isDirect()) {
-                ByteBuffer direct = ByteBuffer.allocateDirect(buffer.remaining());
-                direct.put(buffer);
-                buffer = direct;
-                buffer.flip();
-            }
-
             try (ZInflater inflater = Zlib.getProvider().createInflater()) {
-                inflater.setInput(buffer);
-
-                int totalSize = 0;
-                List<ByteBuffer> outBuffers = new ArrayList<>();
-                while (!inflater.finished()) {
-                    ByteBuffer partBuffer = ByteBuffer.allocateDirect(4096);
-                    inflater.inflate(partBuffer);
-                    outBuffers.add(partBuffer);
-                    int inflated = partBuffer.position();
-                    if (inflated == 0) {
-                        throw new ZlibException("No data inflated");
-                    }
-                    totalSize = Math.addExact(totalSize, inflated);
-                }
-
-                ByteBuffer sumBuffer = ByteBuffer.allocateDirect(totalSize);
-                for (ByteBuffer component : outBuffers) {
-                    component.flip();
-                    sumBuffer.put(component);
-                }
-                sumBuffer.flip();
-                return fromBuffer(sumBuffer, true);
+                return fromBuffer(BufferUtil.deflateInflate(inflater, buffer, 0), true);
             }
         default:
             throw new UnsupportedOperationException("Unsupported compression type " + compressionType);
+        }
+    }
+
+    public ByteBuffer toBuffer() {
+        return TagWriter.toBuffer(new RootTag("", this.root));
+    }
+
+    public ByteBuffer toCompressedBuffer() throws ZlibException {
+        ByteBuffer input = toBuffer();
+        try (ZDeflater deflater = Zlib.getProvider().createDeflater()) {
+            // 1 byte padding for compression type
+            ByteBuffer result = BufferUtil.deflateInflate(deflater, input, 1);
+            result.put(0, (byte) 2); // zlib
+            return result;
         }
     }
 
