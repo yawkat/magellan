@@ -5,8 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>at.yawk.magellan</groupId>
-    <artifactId>magellan</artifactId>
+    <artifactId>magellan-parent</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>magellan</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -19,11 +23,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.12</version>
-        </dependency>
-        <dependency>
-            <groupId>at.yawk.rjoin</groupId>
-            <artifactId>rjoin-zlib</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
