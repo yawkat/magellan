@@ -2,6 +2,7 @@ package at.yawk.magellan.nbt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
  * @author yawkat
  */
 @EqualsAndHashCode(of = "type")
-public abstract class Tag {
+public abstract class Tag implements Iterable<Tag> {
     private final TagType type;
 
     Tag(TagType type) {
@@ -21,34 +22,43 @@ public abstract class Tag {
         return type;
     }
 
+    @Override
+    public final String toString() {
+        return Printer.compact().print(this);
+    }
+
+    public final String toStringPretty() {
+        return Printer.pretty().print(this);
+    }
+
     /// TYPE ACCESSORS
 
-    public boolean isString() {
-        return false;
+    public final boolean isString() {
+        return type == TagType.STRING;
     }
 
-    public boolean isInteger() {
-        return false;
+    public final boolean isInteger() {
+        return type.isInteger();
     }
 
-    public boolean isFloat() {
-        return false;
+    public final boolean isFloat() {
+        return type.isFloat();
     }
 
-    public boolean isNumber() {
-        return false;
+    public final boolean isNumber() {
+        return type.isNumber();
     }
 
-    public boolean isArray() {
-        return false;
+    public final boolean isArray() {
+        return type.isArray();
     }
 
-    public boolean isList() {
-        return false;
+    public final boolean isList() {
+        return type == TagType.LIST;
     }
 
-    public boolean isCompound() {
-        return false;
+    public final boolean isCompound() {
+        return type == TagType.COMPOUND;
     }
 
     /// PRIMITIVE ACCESSORS
@@ -124,6 +134,11 @@ public abstract class Tag {
     }
 
     public int size() {
+        throw unsupported();
+    }
+
+    @Override
+    public Iterator<Tag> iterator() {
         throw unsupported();
     }
 

@@ -17,11 +17,6 @@ class IntArrayTag extends Tag {
     }
 
     @Override
-    public boolean isArray() {
-        return true;
-    }
-
-    @Override
     public int getInt(int i) {
         return array.get(i);
     }
@@ -46,8 +41,4 @@ class IntArrayTag extends Tag {
         return array.capacity();
     }
 
-    @Override
-    public String toString() {
-        return "IntArray[length=" + size() + "]";
-    }
 }

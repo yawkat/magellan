@@ -15,18 +15,8 @@ class StringTag extends Tag {
     }
 
     @Override
-    public boolean isString() {
-        return true;
-    }
-
-    @Override
     public String stringValue() {
         return value.toString();
-    }
-
-    @Override
-    public String toString() {
-        return '"' + String.valueOf(value) + '"';
     }
 
     @Override

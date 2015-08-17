@@ -1,5 +1,6 @@
 package at.yawk.magellan.nbt;
 
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
@@ -18,11 +19,6 @@ class ListTag extends Tag {
         super(TagType.LIST);
         this.componentType = tags.isEmpty() ? null : componentType;
         this.tags = tags;
-    }
-
-    @Override
-    public boolean isList() {
-        return true;
     }
 
     @Override
@@ -64,7 +60,8 @@ class ListTag extends Tag {
     }
 
     @Override
-    public String toString() {
-        return "List" + tags;
+    public Iterator<Tag> iterator() {
+        return tags.iterator();
     }
+
 }

@@ -20,11 +20,6 @@ class ByteArrayTag extends Tag {
     }
 
     @Override
-    public boolean isArray() {
-        return true;
-    }
-
-    @Override
     public byte getByte(int i) {
         return array.get(i);
     }
@@ -49,8 +44,4 @@ class ByteArrayTag extends Tag {
         return array.capacity();
     }
 
-    @Override
-    public String toString() {
-        return "ByteArray[length=" + size() + "]";
-    }
 }

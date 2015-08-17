@@ -1,19 +1,20 @@
 package at.yawk.magellan.nbt.lexer;
 
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * @author yawkat
  */
 class ListWalker implements Walker {
     private final Lexer lexer;
-    private final Function<Lexer, Event> elementWalker;
+    @Nullable private final Function<Lexer, Event> elementWalker;
     private int remaining;
 
     ListWalker(Lexer lexer, int count, byte id) {
         this.lexer = lexer;
         this.remaining = count;
-        this.elementWalker = Lexer.elementWalker(id);
+        this.elementWalker = id == 0 ? null : Lexer.elementWalker(id);
     }
 
     @Override
@@ -22,6 +23,7 @@ class ListWalker implements Walker {
             lexer.popWalker();
             return Event.END_LIST;
         } else {
+            assert elementWalker != null;
             Event event = elementWalker.apply(lexer);
             remaining--;
             return event;

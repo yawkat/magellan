@@ -15,16 +15,6 @@ class IntegerTag extends Tag {
     }
 
     @Override
-    public boolean isInteger() {
-        return true;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
-
-    @Override
     public long longValue() {
         return value;
     }
@@ -39,8 +29,4 @@ class IntegerTag extends Tag {
         return String.valueOf(value);
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(value);
-    }
 }

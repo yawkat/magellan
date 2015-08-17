@@ -15,16 +15,6 @@ class FloatTag extends Tag {
     }
 
     @Override
-    public boolean isFloat() {
-        return true;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
-
-    @Override
     public long longValue() {
         return (long) value;
     }
@@ -39,8 +29,4 @@ class FloatTag extends Tag {
         return String.valueOf(value);
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(value);
-    }
 }
