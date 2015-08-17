@@ -4,6 +4,7 @@ import at.yawk.magellan.tools.cli.Cli;
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.IStringConverterFactory;
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.*;
@@ -41,7 +42,13 @@ public abstract class Application extends CliHolder
             }
         });
         commander.addObject(this);
-        commander.parse(args.toArray(new String[args.size()]));
+        try {
+            commander.parse(args.toArray(new String[args.size()]));
+        } catch (ParameterException e) {
+            e.printStackTrace();
+            commander.usage();
+            System.exit(1);
+        }
     }
 
     public final void execute(@Nonnull ThrowingRunnable command) {

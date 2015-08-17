@@ -17,7 +17,10 @@ import net.jcip.annotations.GuardedBy;
  */
 @Slf4j
 public class TileCounter extends WorldProcessor {
-    @Parameter(names = "--count")
+    @Parameter(
+            description = "How many chunks should be printed",
+            names = "--count"
+    )
     int count = 10;
 
     @GuardedBy("topChunks")

@@ -17,7 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author yawkat
  */
 public class TileRemover extends WorldProcessor {
-    @Parameter(names = "--id", required = true)
+    @Parameter(
+            description = "Block ID to remove",
+            names = "--id",
+            required = true
+    )
     int id;
 
     private final AtomicInteger removed = new AtomicInteger();
