@@ -4,6 +4,7 @@ import at.yawk.magellan.BlockCursor;
 import at.yawk.magellan.Chunk;
 import at.yawk.magellan.Section;
 import at.yawk.magellan.TileEntity;
+import at.yawk.magellan.tools.Bootstrap;
 import at.yawk.magellan.tools.WorldProcessor;
 import com.beust.jcommander.Parameter;
 import java.util.Iterator;
@@ -20,6 +21,10 @@ public class TileRemover extends WorldProcessor {
     int id;
 
     private final AtomicInteger removed = new AtomicInteger();
+
+    public static void main(String[] args) {
+        Bootstrap.start(TileRemover.class, args);
+    }
 
     @Override
     protected CompletionStage<Boolean> processChunk(Chunk chunk) {

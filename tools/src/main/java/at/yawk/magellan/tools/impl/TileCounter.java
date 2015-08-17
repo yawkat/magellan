@@ -1,6 +1,7 @@
 package at.yawk.magellan.tools.impl;
 
 import at.yawk.magellan.Chunk;
+import at.yawk.magellan.tools.Bootstrap;
 import at.yawk.magellan.tools.WorldProcessor;
 import com.beust.jcommander.Parameter;
 import java.util.PriorityQueue;
@@ -21,6 +22,10 @@ public class TileCounter extends WorldProcessor {
 
     @GuardedBy("topChunks")
     private final Queue<ChunkEntry> topChunks = new PriorityQueue<>();
+
+    public static void main(String[] args) {
+        Bootstrap.start(TileCounter.class, args);
+    }
 
     @Override
     protected void onComplete() {
