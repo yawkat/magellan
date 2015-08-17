@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,6 +25,7 @@ public class RegionFile {
     /**
      * Region buffer. Mark, position and limit are arbitrary.
      */
+    @Getter
     private ByteBuffer buffer;
 
     private RegionFile(ByteBuffer buffer) {
@@ -192,6 +195,33 @@ public class RegionFile {
      */
     public void saveChunk(int x, int z, Chunk chunk) throws ZlibException {
         saveChunkBytes(x, z, chunk.toCompressedBuffer());
+    }
+
+    /**
+     * Discard unused trailing space.
+     */
+    public void compact() {
+        int endSector = getChunkPositions().stream()
+                .mapToInt(pos -> pos.getOffset() + pos.getSectorCount())
+                .max().orElse(2);
+        int newCapacity = endSector * 4096;
+        if (buffer.capacity() > newCapacity) {
+            ByteBuffer newBuffer = ByteBuffer.allocateDirect(newCapacity);
+            buffer.clear();
+            buffer.limit(newCapacity);
+            newBuffer.put(buffer);
+            buffer = newBuffer;
+        }
+    }
+
+    public void save(Path path) throws IOException {
+        try (SeekableByteChannel channel = Files.newByteChannel(
+                path, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW)) {
+            buffer.clear();
+            while (buffer.hasRemaining()) {
+                channel.write(buffer);
+            }
+        }
     }
 
     private static byte getRequiredSectorCount(int payloadSize) {
