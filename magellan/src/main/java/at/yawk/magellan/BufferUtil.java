@@ -31,6 +31,7 @@ class BufferUtil {
 
         GrowingBuffer outBuffer = new GrowingBuffer();
 
+        int noneMovedCount = 0;
         while (!stream.finished()) {
             ByteBuffer partBuffer = outBuffer.nextWritable(4096);
             if (stream instanceof ZInflater) {
@@ -40,7 +41,13 @@ class BufferUtil {
                 ((ZDeflater) stream).deflate(partBuffer);
             }
             int moved = partBuffer.position();
-            if (moved == 0) { throw new ZlibException("No data moved"); }
+            if (moved == 0) {
+                if (noneMovedCount++ > 4) {
+                    throw new ZlibException("No data moved");
+                }
+            } else {
+                noneMovedCount = 0;
+            }
         }
 
         assert !input.hasRemaining();
